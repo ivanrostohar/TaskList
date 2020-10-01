@@ -1,5 +1,5 @@
 // Define UI variables
-const form = document.querySelector('#task-form');
+const taskForm = document.querySelector('#task-form');
 const taskList = document.querySelector('.collection');
 const clearBtn = document.querySelector('.clear-tasks');
 const filter = document.querySelector('#filter');
@@ -12,7 +12,7 @@ function loadEventListeners() {
   // DOM Load event
   document.addEventListener('DOMContentLoaded', getTasks);
   // Add task event
-  form.addEventListener('submit', addTask);
+  taskForm.addEventListener('submit', addTask);
   // Remove task event
   taskList.addEventListener('click', removeTask);
   // Clear task event
@@ -23,14 +23,9 @@ function loadEventListeners() {
 
 // Get Tasks from Local Storage
 function getTasks() {
-  let tasks;
-  if (localStorage.getItem('tasks') === null) {
-    tasks = [];
-  } else {
-    tasks = JSON.parse(localStorage.getItem('tasks'));
-  };
+  let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
-  tasks.forEach(function (task) {
+  tasks.forEach((task) => {
     const li = document.createElement('li');
     li.className = 'collection-item';
     li.appendChild(document.createTextNode(task));
@@ -41,7 +36,6 @@ function getTasks() {
     taskList.appendChild(li);
   });
 };
-
 
 function addTask(e) {
   if (taskInput.value === '') {
@@ -73,14 +67,8 @@ function addTask(e) {
 
 // Store task
 function storeTaskInLocalStorage(task) {
-  let tasks;
-  if (localStorage.getItem('tasks') === null) {
-    tasks = [];
-  } else {
-    tasks = JSON.parse(localStorage.getItem('tasks'));
-  };
+  let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
   tasks.push(task);
-
   localStorage.setItem('tasks', JSON.stringify(tasks));
 };
 
@@ -98,21 +86,13 @@ function removeTask(e) {
 
 // Remove from Local Storage
 function removeTaskFromLocalStorage(taskItem) {
-  let tasks;
-  if (localStorage.getItem('tasks') === null) {
-    tasks = [];
-  } else {
-    tasks = JSON.parse(localStorage.getItem('tasks'));
-  };
-
-  tasks.forEach(function (task, index) {
+  let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  tasks.forEach((task, index) => {
     if (taskItem.textContent === task) {
       tasks.splice(index, 1);
     }
   });
-
   localStorage.setItem('tasks', JSON.stringify(tasks));
-
 };
 
 // Clear tasks
@@ -120,7 +100,6 @@ function clearTasks() {
   while (taskList.firstChild) {
     taskList.removeChild(taskList.firstChild);
   };
-
   clearTasksFromLocalStorage();
 };
 
@@ -132,7 +111,6 @@ function clearTasksFromLocalStorage() {
 // Filter Tasks
 function filterTasks(e) {
   const text = e.target.value.toLowerCase();
-
   document.querySelectorAll('.collection-item').forEach
     (function (task) {
       const item = task.firstChild.textContent;
